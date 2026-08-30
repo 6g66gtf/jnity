@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>游戏地图制作文档 — penigin</title>
+    <style>
+        /* ===== 全局重置 & 基础 ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'PingFang SC', Roboto, system-ui, -apple-system, sans-serif;
+            background: #f0f2f5;
+            color: #1e293b;
+            line-height: 1.7;
+            display: flex;
+        }
+
+        /* ===== 侧边导航 ===== */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 280px;
+            height: 100vh;
+            background: #0f172a;
+            color: #e2e8f0;
+            overflow-y: auto;
+            padding: 24px 16px 40px;
+            z-index: 1000;
+            box-shadow: 2px 0 12px rgba(0, 0, 0, 0.15);
+            scrollbar-width: thin;
+            scrollbar-color: #334155 #0f172a;
+        }
+        .sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .sidebar::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        .sidebar::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+
+        .sidebar .logo {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: #f8fafc;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #1e293b;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sidebar .logo span {
+            background: #3b82f6;
+            font-size: 14px;
+            padding: 0 10px;
+            border-radius: 12px;
+            color: #fff;
+        }
+
+        .sidebar .nav-section {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #64748b;
+            margin: 20px 0 8px 8px;
+            font-weight: 600;
+        }
+
+        .sidebar a {
+            display: block;
+            color: #cbd5e1;
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.15s ease;
+            margin: 2px 0;
+            border-left: 2px solid transparent;
+        }
+        .sidebar a:hover {
+            background: #1e293b;
+            color: #f8fafc;
+            border-left-color: #3b82f6;
+        }
+        .sidebar a.active {
+            background: #1e293b;
+            color: #f8fafc;
+            border-left-color: #3b82f6;
+        }
+        .sidebar a.sub {
+            padding-left: 28px;
+            font-size: 13px;
+            color: #94a3b8;
+        }
+        .sidebar a.sub:hover {
+            color: #e2e8f0;
+        }
+
+        /* ===== 主内容区 ===== */
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            padding: 40px 48px 80px;
+            max-width: 1100px;
+            min-height: 100vh;
+        }
+
+        /* ===== 标题 & 元信息 ===== */
+        .doc-header {
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .doc-header h1 {
+            font-size: 36px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+        .doc-header h1 small {
+            font-size: 16px;
+            font-weight: 400;
+            color: #64748b;
+            letter-spacing: 0;
+        }
+        .doc-header .meta {
+            margin-top: 10px;
+            color: #64748b;
+            font-size: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .doc-header .meta code {
+            background: #e2e8f0;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 13px;
+            color: #1e293b;
+        }
+
+        /* ===== 章节卡片 ===== */
+        .section {
+            margin-bottom: 48px;
+        }
+        .section h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0f172a;
+            padding-bottom: 8px;
+            border-bottom: 3px solid #3b82f6;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        .section h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1e293b;
+            margin: 28px 0 14px 0;
+        }
+        .section h4 {
+            font-size: 17px;
+            font-weight: 600;
+            color: #334155;
+            margin: 22px 0 10px 0;
+        }
+        .section p {
+            margin: 12px 0;
+            color: #334155;
+        }
+        .section ul,
+        .section ol {
+            margin: 10px 0 16px 24px;
+            color: #334155;
+        }
+        .section li {
+            margin: 6px 0;
+        }
+        .section .note {
+            background: #f1f5f9;
+            border-left: 4px solid #3b82f6;
+            padding: 12px 18px;
+            border-radius: 6px;
+            margin: 16px 0;
+            font-size: 14px;
+            color: #1e293b;
+        }
+        .section .warning {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 12px 18px;
+            border-radius: 6px;
+            margin: 16px 0;
+            font-size: 14px;
+            color: #78350f;
+        }
+
+        /* ===== 表格 ===== */
+        .table-wrap {
+            overflow-x: auto;
+            margin: 16px 0 20px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            background: #fff;
+        }
+        table th {
+            background: #f1f5f9;
+            color: #0f172a;
+            font-weight: 600;
+            padding: 10px 14px;
+            text-align: left;
+            border-bottom: 2px solid #e2e8f0;
+            white-space: nowrap;
+        }
+        table td {
+            padding: 9px 14px;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: top;
+        }
+        table tr:last-child td {
+            border-bottom: none;
+        }
+        table tr:hover td {
+            background: #f8fafc;
+        }
+        table .type-code {
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 13px;
+            color: #2563eb;
+            background: #eff6ff;
+            padding: 0 6px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        /* ===== 代码块 ===== */
+        pre {
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 18px 22px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 13.5px;
+            line-height: 1.6;
+            margin: 14px 0 18px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            position: relative;
+        }
+        pre .json-key {
+            color: #fcd34d;
+        }
+        pre .json-string {
+            color: #6ee7b7;
+        }
+        pre .json-number {
+            color: #93c5fd;
+        }
+        pre .json-boolean {
+            color: #f472b6;
+        }
+        pre .json-null {
+            color: #a5b4fc;
+        }
+        pre .json-brace {
+            color: #e2e8f0;
+        }
+        pre .comment {
+            color: #94a3b8;
+            font-style: italic;
+        }
+        pre .lua-keyword {
+            color: #c084fc;
+        }
+        pre .lua-string {
+            color: #6ee7b7;
+        }
+        pre .lua-comment {
+            color: #94a3b8;
+        }
+        pre .lua-func {
+            color: #93c5fd;
+        }
+
+        /* 行内代码 */
+        .inline-code {
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 13px;
+            background: #f1f5f9;
+            color: #1e293b;
+            padding: 0 6px;
+            border-radius: 4px;
+            border: 1px solid #e2e8f0;
+        }
+
+        /* ===== 卡片 ===== */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            margin: 14px 0;
+        }
+        .card-grid .card {
+            background: #fff;
+            padding: 16px 20px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+        .card-grid .card h5 {
+            font-size: 15px;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 4px;
+        }
+        .card-grid .card p {
+            font-size: 14px;
+            color: #64748b;
+            margin: 4px 0;
+        }
+        .card-grid .card .badge {
+            display: inline-block;
+            background: #dbeafe;
+            color: #1d4ed8;
+            font-size: 12px;
+            padding: 0 10px;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+
+        /* ===== 目录 (TOC) ===== */
+        .toc {
+            background: #fff;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            padding: 18px 24px 14px;
+            margin-bottom: 36px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+        }
+        .toc h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 0 0 10px 0;
+        }
+        .toc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 4px 20px;
+        }
+        .toc-grid a {
+            color: #1e293b;
+            text-decoration: none;
+            font-size: 14px;
+            padding: 3px 0;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.1s;
+            display: inline-block;
+        }
+        .toc-grid a:hover {
+            border-bottom-color: #3b82f6;
+            color: #0f172a;
+        }
+
+        /* ===== 响应式 ===== */
+        @media (max-width: 900px) {
+            .sidebar {
+                width: 220px;
+                padding: 16px 12px;
+            }
+            .main-content {
+                margin-left: 220px;
+                padding: 28px 20px 60px;
+            }
+            .doc-header h1 {
+                font-size: 28px;
+            }
+        }
+        @media (max-width: 700px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+                max-height: 320px;
+                overflow-y: auto;
+                padding: 16px 18px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            }
+            .sidebar .logo {
+                font-size: 18px;
+                padding-bottom: 12px;
+                margin-bottom: 12px;
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 20px 16px 50px;
+            }
+            .doc-header h1 {
+                font-size: 24px;
+            }
+            .section h2 {
+                font-size: 22px;
+            }
+            .toc-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        @media (max-width: 480px) {
+            .toc-grid {
+                grid-template-columns: 1fr;
+            }
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+            pre {
+                font-size: 12px;
+                padding: 12px 14px;
+            }
+            .sidebar a {
+                font-size: 13px;
+                padding: 4px 10px;
+            }
+        }
+
+        /* ===== 打印优化 ===== */
+        @media print {
+            .sidebar {
+                display: none;
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+            pre {
+                background: #f1f5f9;
+                color: #0f172a;
+                border: 1px solid #e2e8f0;
+            }
+            .section h2 {
+                border-bottom-color: #0f172a;
+            }
+        }
+
+        /* ===== 工具 ===== */
+        .mt-1 {
+            margin-top: 6px;
+        }
+        .mb-1 {
+            margin-bottom: 6px;
+        }
+        .gap-1 {
+            gap: 6px;
+        }
+
+        /* 键盘按键样式 */
+        .kbd {
+            display: inline-block;
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            padding: 0 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            font-weight: 600;
+            color: #0f172a;
+            box-shadow: 0 1px 0 #94a3b8;
+            line-height: 1.6;
+        }
+
+        /* 字段名高亮 */
+        .field {
+            font-weight: 600;
+            color: #0f172a;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== 侧边导航 ===== -->
+    <nav class="sidebar" id="sidebar">
+        <div class="logo">
+            📄 地图文档
+            <span>v1.0</span>
+        </div>
+
+        <div class="nav-section">快速开始</div>
+        <a href="#start">启动游戏</a>
+        <a href="#controls">基本操作</a>
+
+        <div class="nav-section">文件结构</div>
+        <a href="#files">目录结构</a>
+        <a href="#setting">setting.txt</a>
+
+        <div class="nav-section">地图编辑</div>
+        <a href="#map-overview">概述</a>
+        <a href="#block" class="sub">方块 (block)</a>
+        <a href="#item" class="sub">物品 (item)</a>
+        <a href="#player" class="sub">玩家 (player)</a>
+        <a href="#entity" class="sub">实体 (entity)</a>
+        <a href="#message" class="sub">— 对话 (message)</a>
+        <a href="#button" class="sub">— 按钮 (button)</a>
+        <a href="#trigger" class="sub">— 触发器 (trigger)</a>
+
+        <div class="nav-section">事件 &amp; 音频</div>
+        <a href="#events">事件系统</a>
+        <a href="#audio">音频配置</a>
+
+        <div class="nav-section">Lua 脚本</div>
+        <a href="#lua">Lua 接口</a>
+
+        <div class="nav-section">其他</div>
+        <a href="#faq">常见问题</a>
+        <a href="#extend">开发扩展</a>
+    </nav>
+
+    <!-- ===== 主内容 ===== -->
+    <div class="main-content" id="main">
+
+        <!-- 页眉 -->
+        <header class="doc-header">
+            <h1>
+                游戏地图制作文档
+                <small>Java Swing 2D RPG</small>
+            </h1>
+            <div class="meta">
+                <span>📅 版本 1.1</span>
+                <span>🧩 依赖 JDK 21 + org.json + luaj</span>
+                <span>🎮 by 6g66gtf</span>
+            </div>
+            <p style="margin-top:12px;color:#475569;font-size:15px;">
+                面向地图制作者、模组开发者及玩家 · 详细说明玩法、配置、地图编辑、事件系统及扩展方式
+            </p>
+        </header>
+
+        <!-- ===== 目录 ===== -->
+        <div class="toc" id="toc">
+            <h3>📑 目录</h3>
+            <div class="toc-grid">
+                <a href="#start">▶ 快速开始</a>
+                <a href="#files">▶ 文件结构</a>
+                <a href="#map-overview">▶ 地图编辑</a>
+                <a href="#block">▪ 方块</a>
+                <a href="#item">▪ 物品</a>
+                <a href="#player">▪ 玩家</a>
+                <a href="#entity">▪ 实体</a>
+                <a href="#message">▪ 对话</a>
+                <a href="#button">▪ 按钮</a>
+                <a href="#trigger">▪ 触发器</a>
+                <a href="#events">▶ 事件系统</a>
+                <a href="#audio">▶ 音频配置</a>
+                <a href="#lua">▶ Lua 脚本</a>
+                <a href="#faq">▶ 常见问题</a>
+                <a href="#extend">▶ 开发扩展</a>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 1. 系统要求 & 快速开始 -->
+        <!-- ============================================================ -->
+
+        <section class="section" id="start">
+            <h2>1. 系统要求</h2>
+            <ul>
+                <li><strong>Java 运行环境</strong>：JDK 21 或更高版本</li>
+                <li><strong>操作系统</strong>：Windows / macOS / Linux（桌面环境）</li>
+                <li><strong>依赖库</strong>：
+                    <span class="inline-code">org.json</span>（JSON 解析）、
+                    <span class="inline-code">org.luaj.vm2</span>（Lua 脚本引擎）
+                </li>
+            </ul>
+
+            <h2>2. 快速开始</h2>
+
+            <h3 id="start-game">2.1 启动游戏</h3>
+            <p>运行 <span class="inline-code">Main</span> 类（通过 IDE 或命令行）。<br>
+                游戏窗口标题为 <strong>"by 6g66gtf"</strong>，默认大小 <strong>400×340</strong> 像素，不可缩放。</p>
+            <p>如果使用打包好的 JAR，请确保 <span class="inline-code">setting.txt</span> 及所有资源文件位于 JAR 同级目录下。</p>
+
+            <h3 id="controls">2.2 基本操作</h3>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>按键</th><th>功能</th></tr></thead>
+                    <tbody>
+                        <tr><td><span class="kbd">W</span> <span class="kbd">A</span> <span class="kbd">S</span> <span class="kbd">D</span></td><td>向上 / 左 / 下 / 右移动玩家</td></tr>
+                        <tr><td><span class="kbd">F</span></td><td>交互（面对 NPC、按钮时触发对话或动作；在对话框模式中翻页）</td></tr>
+                        <tr><td><span class="kbd">Z</span></td><td>打开 / 关闭“背包查看模式”（显示主手物品详情）</td></tr>
+                        <tr><td><span class="kbd">R</span></td><td>重置当前关卡（重新加载地图 JSON）</td></tr>
+                        <tr><td><span class="kbd">B</span></td><td>调试：在控制台打印玩家当前坐标（X, Y）</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="note">
+                移动和交互均在游戏循环中处理（每秒 10 tick）
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- 2. 文件与目录结构 -->
+        <!-- ============================================================ -->
+
+        <section class="section" id="files">
+            <h2>3. 文件与目录结构</h2>
+            <pre style="background:#1e293b;color:#e2e8f0;">
+                <span style="color:#94a3b8;">项目根目录/</span>
+                ├── <span style="color:#fcd34d;">打包后的jar文件</span>
+                ├── <span style="color:#fcd34d;">setting.txt</span>               <span style="color:#94a3b8;"># 全局配置文件（JSON 格式）</span>
+                ├── <span style="color:#fcd34d;">地图文件</span>（由 setting.txt 指定）  <span style="color:#94a3b8;"># 地图数据（JSON）</span>
+                ├── <span style="color:#fcd34d;">音效配置文件</span>（由 setting.txt 指定） <span style="color:#94a3b8;"># 音频映射（JSON）</span>
+                ├── <span style="color:#fcd34d;">icon/</span>                     <span style="color:#94a3b8;"># 图片资源（玩家、方块、物品图标）</span>
+                ├── <span style="color:#fcd34d;">sound/</span>                    <span style="color:#94a3b8;"># 音频文件（建议 WAV 格式）</span>
+                └── <span style="color:#fcd34d;">Lua/</span>                      <span style="color:#94a3b8;"># Lua 脚本目录</span>
+                    └── <span style="color:#fcd34d;">test.lua</span>              <span style="color:#94a3b8;"># 示例脚本</span>
+            </pre>
+
+            <h3 id="setting">3.1 setting.txt 示例</h3>
+            <pre>{
+                <span class="json-key">"map"</span>: <span class="json-string">"map/level1.json"</span>,
+                <span class="json-key">"content"</span>: <span class="json-string">"sound/sound_config.json"</span>
+            }</pre>
+            <ul>
+                <li><span class="field">"map"</span>：地图文件路径（相对于项目根目录）。</li>
+                <li><span class="field">"content"</span>：音频配置文件路径。</li>
+            </ul>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- 3. 地图编辑 -->
+        <!-- ============================================================ -->
+
+        <section class="section" id="map-overview">
+            <h2>4. 地图编辑（JSON 格式）</h2>
+            <p>地图文件由根对象 <span class="inline-code">{ "events": [...], "content": [...] }</span> 组成，数组元素为以下类型之一。</p>
+
+            <h3>4.1.1 地图初始化事件</h3>
+            <p>初始化事件写法同5.1</p>
+            <h3>4.1.1 event:{} 示例</h3>
+            <pre>[
+                <span class="json-key">"type"</span>: <span class="json-string">"queueEvent"</span>, <span class="json-key">"event"</span>: <span class="json-string">{</span> <span class="json-key">"event"</span>: <span class="json-string">"playSound"</span>, <span class="json-key">"key"</span>: <span class="json-string">"open"</span> <span class="json-string">}</span>,
+                <span class="json-key">"type"</span>: <span class="json-string">"queueEvent"</span>, <span class="json-key">"event"</span>: <span class="json-string">{</span> <span class="json-key">"event"</span>: <span class="json-string">"playBGM"</span>, <span class="json-key">"key"</span>: <span class="json-string">"home"</span> <span class="json-string">}</span>,
+                <span class="json-key">"type"</span>: <span class="json-string">"queueEvent"</span>, <span class="json-key">"event"</span>: <span class="json-string">{</span> <span class="json-key">"event"</span>: <span class="json-string">"DrawMessage"</span>, <span class="json-key">"name"</span>: <span class="json-string">"system"</span>, <span class="json-key">"msg"</span>: <span class="json-string">"你启动了map.txt"</span> <span class="json-string">}</span>
+            ],</pre>
+
+
+
+            <h3>4.1.2 通用字段</h3>
+            <p>每个对象必须包含 <span class="field">"type"</span> 字段，取值如下：</p>
+            <div class="card-grid">
+                <div class="card"><h5><span class="badge">block</span></h5><p>静态方块</p></div>
+                <div class="card"><h5><span class="badge">item</span></h5><p>可拾取物品</p></div>
+                <div class="card"><h5><span class="badge">player</span></h5><p>玩家初始位置（每图唯一）</p></div>
+                <div class="card"><h5><span class="badge">entity</span></h5><p>交互实体（由 <span class="inline-code">"type1"</span> 区分子类型）</p></div>
+            </div>
+            <div class="note">
+                📐 所有坐标均为整数，以格子为单位（1 格 = 60 像素）。视口大小为 5×5 格，玩家始终居中。
+            </div>
+
+            <!-- ===== 4.2 block ===== -->
+            <h3 id="block">4.2 type = "block" —— 方块</h3>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>字段</th><th>类型</th><th>说明</th></tr></thead>
+                    <tbody>
+                        <tr><td><span class="field">type</span></td><td><span class="type-code">string</span></td><td>固定 <span class="inline-code">"block"</span></td></tr>
+                        <tr><td><span class="field">x</span></td><td><span class="type-code">int</span></td><td>左上角 X 坐标</td></tr>
+                        <tr><td><span class="field">y</span></td><td><span class="type-code">int</span></td><td>左上角 Y 坐标</td></tr>
+                        <tr><td><span class="field">w</span></td><td><span class="type-code">int</span></td><td>宽度（格数）</td></tr>
+                        <tr><td><span class="field">h</span></td><td><span class="type-code">int</span></td><td>高度（格数）</td></tr>
+                        <tr><td><span class="field">image</span></td><td><span class="type-code">string</span></td><td>图片文件路径</td></tr>
+                        <tr><td><span class="field">isCollide</span></td><td><span class="type-code">boolean</span></td><td>是否有碰撞体积（玩家不可穿过）</td></tr>
+                        <tr><td><span class="field">isDraw</span></td><td><span class="type-code">boolean</span></td><td>是否绘制（false 则不可见，但仍可能有碰撞）</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p><strong>示例：</strong></p>
+            <pre>{
+                <span class="json-key">"type"</span>: <span class="json-string">"block"</span>,
+                <span class="json-key">"x"</span>: <span class="json-number">-1</span>,
+                <span class="json-key">"y"</span>: <span class="json-number">-1</span>,
+                <span class="json-key">"w"</span>: <span class="json-number">1</span>,
+                <span class="json-key">"h"</span>: <span class="json-number">7</span>,
+                <span class="json-key">"image"</span>: <span class="json-string">"icon/wall.png"</span>,
+                <span class="json-key">"isCollide"</span>: <span class="json-boolean">true</span>,
+                <span class="json-key">"isDraw"</span>: <span class="json-boolean">true</span>
+            }</pre>
+
+            <!-- ===== 4.3 item ===== -->
+            <h3 id="item">4.3 type = "item" —— 可拾取物品</h3>
+            <p>玩家移动到物品所在格时按F拾取，并放入主手（唯一物品栏）。拾取后触发 <span class="inline-code">DrawMessage</span> 事件，显示“你捡起了 &lt;名称&gt;”。</p>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>字段</th><th>类型</th><th>说明</th></tr></thead>
+                    <tbody>
+                        <tr><td><span class="field">type</span></td><td><span class="type-code">string</span></td><td>固定 <span class="inline-code">"item"</span></td></tr>
+                        <tr><td><span class="field">x</span></td><td><span class="type-code">int</span></td><td>坐标 X</td></tr>
+                        <tr><td><span class="field">y</span></td><td><span class="type-code">int</span></td><td>坐标 Y</td></tr>
+                        <tr><td><span class="field">image</span></td><td><span class="type-code">string</span></td><td>图标路径</td></tr>
+                        <tr><td><span class="field">name</span></td><td><span class="type-code">string</span></td><td>物品名称（用于条件匹配）</td></tr>
+                        <tr><td><span class="field">label</span></td><td><span class="type-code">string</span></td><td>描述标签（用于条件匹配）</td></tr>
+                        <tr><td><span class="field">value</span></td><td><span class="type-code">int</span></td><td>数值（用于条件匹配）</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p><strong>示例：</strong></p>
+            <pre>{
+                <span class="json-key">"type"</span>: <span class="json-string">"item"</span>,
+                <span class="json-key">"x"</span>: <span class="json-number">0</span>,
+                <span class="json-key">"y"</span>: <span class="json-number">0</span>,
+                <span class="json-key">"image"</span>: <span class="json-string">"icon/diamond.png"</span>,
+                <span class="json-key">"name"</span>: <span class="json-string">"钻石"</span>,
+                <span class="json-key">"label"</span>: <span class="json-string">"稀有矿物"</span>,
+                <span class="json-key">"value"</span>: <span class="json-number">100</span>
+            }</pre>
+
+            <!-- ===== 4.4 player ===== -->
+            <h3 id="player">4.4 type = "player" —— 玩家初始位置</h3>
+            <p>每张地图必须且仅有一个玩家对象。</p>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>字段</th><th>类型</th><th>说明</th></tr></thead>
+                    <tbody>
+                        <tr><td><span class="field">type</span></td><td><span class="type-code">string</span></td><td>固定 <span class="inline-code">"player"</span></td></tr>
+                        <tr><td><span class="field">x</span></td><td><span class="type-code">int</span></td><td>初始 X 坐标</td></tr>
+                        <tr><td><span class="field">y</span></td><td><span class="type-code">int</span></td><td>初始 Y 坐标</td></tr>
+                        <tr><td><span class="field">default-health</span></td><td><span class="type-code">int</span></td><td>初始生命值（由地图文件定义）</td></tr>
+                        <tr><td><span class="field">image</span></td><td><span class="type-code">string</span></td><td>玩家角色图片路径</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p><strong>示例：</strong></p>
+            <pre>{
+                <span class="json-key">"type"</span>: <span class="json-string">"player"</span>,
+                <span class="json-key">"image"</span>: <span class="json-string">"icon/Player.png"</span>,
+                <span class="json-key">"x"</span>: <span class="json-number">2</span>,
+                <span class="json-key">"y"</span>: <span class="json-number">2</span>,
+                <span class="json-key">"default-health"</span>: <span class="json-number">10</span>
+            }</pre>
+
+            <!-- ===== 4.5 entity ===== -->
+            <h3 id="entity">4.5 type = "entity" —— 交互实体</h3>
+            <p>由 <span class="field">"type1"</span> 字段区分具体行为，可选值：<span class="inline-code">"message"</span>、<span class="inline-code">"button"</span>、<span class="inline-code">"trigger"</span>。</p>
+
+            <!-- 4.5.1 message -->
+            <h4 id="message">4.5.1 type1 = "message" —— 对话 NPC</h4>
+            <p>玩家面对该实体按下 <span class="kbd">F</span> 键时显示多页对话，按 <span class="kbd">F</span> 逐页翻看，全部显示后自动关闭对话框。</p>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>字段</th><th>类型</th><th>说明</th></tr></thead>
+                    <tbody>
+                        <tr><td><span class="field">type</span></td><td><span class="type-code">string</span></td><td>固定 <span class="inline-code">"entity"</span></td></tr>
+                        <tr><td><span class="field">type1</span></td><td><span class="type-code">string</span></td><td>固定 <span class="inline-code">"message"</span></td></tr>
+                        <tr><td><span class="field">x</span></td><td><span class="type-code">int</span></td><td>坐标 X</td></tr>
+                        <tr><td><span class="field">y</span></td><td><span class="type-code">int</span></td><td>坐标 Y</td></tr>
+                        <tr><td><span class="field">name</span></td><td><span class="type-code">string</span></td><td>对话者名称（显示在对话框顶部）</td></tr>
+                        <tr><td><span class="field">msg</span></td><td><span class="type-code">array&lt;string&gt;</span></td><td>多行对话内容（数组每个元素为一页）</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p><strong>示例：</strong></p>
+            <pre>{
+                <span class="json-key">"type"</span>: <span class="json-string">"entity"</span>,
+                <span class="json-key">"type1"</span>: <span class="json-string">"message"</span>,
+                <span class="json-key">"name"</span>: <span class="json-string">"PC"</span>,
+                <span class="json-key">"msg"</span>: [<span class="json-string">"你好！"</span>, <span class="json-string">"欢迎来到世界。"</span>, <span class="json-string">"按 F 继续。"</span>],
+                <span class="json-key">"x"</span>: <span class="json-number">0</span>,
+                <span class="json-key">"y"</span>: <span class="json-number">2</span>
+            }</pre>
+
+            <!-- 4.5.2 button -->
+            <h4 id="button">4.5.2 type1 = "button" —— 按钮</h4>
+            <p>玩家面对该实体按下 <span class="kbd">F</span> 键时执行动作列表（顺序执行）。</p>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>字段</th><th>类型</th><th>说明</th></tr></thead>
+                    <tbody>
+                        <tr><td><span class="field">type</span></td><td><span class="type-code">string</span></td><td>固定 <span class="inline-code">"entity"</span></td></tr>
+                        <tr><td><span class="field">type1</span></td><td><span class="type-code">string</span></td><td>固定 <span class="inline-code">"button"</span></td></tr>
+                        <tr><td><span class="field">x</span></td><td><span class="type-code">int</span></td><td>坐标 X</td></tr>
+                        <tr><td><span class="field">y</span></td><td><span class="type-code">int</span></td><td>坐标 Y</td></tr>
+                        <tr><td><span class="field">actions</span></td><td><span class="type-code">array&lt;object&gt;</span></td><td>动作对象列表（见下方）</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h5>动作对象（Button）</h5>
+            <p>每个动作必须包含 <span class="field">"type"</span>，取值及参数：</p>
+            <ul>
+                <li>
+                    <strong><span class="inline-code">"queueEvent"</span></strong> —— 触发事件<br>
+                    需要子对象 <span class="inline-code">"event"</span>，其中 <span class="field">"event"</span> 字段可取：
+                    <ul>
+                        <li><span class="inline-code">"draw_msg"</span>：显示单条消息，需提供 <span class="field">"name"</span> 和 <span class="field">"msg"</span>。</li>
+                        <li><span class="inline-code">"playSound"</span>：播放一次短音效，需提供 <span class="field">"key"</span>（音频配置中的键名）。</li>
+                        <li><span class="inline-code">"playLoopSound"</span>：循环播放音效（会停止当前 BGM），需提供 <span class="field">"key"</span>。</li>
+                        <li><span class="inline-code">"playBGM"</span>：切换背景音乐（停止所有音频），需提供 <span class="field">"key"</span>。</li>
+                        <li><span class="inline-code">"stopAll"</span>：停止所有音频（无额外参数）。</li>
+                        <li><span class="inline-code">"setPlayerHealth"</span>：设置玩家生命值，需提供 <span class="field">"health"</span>（整数）。</li>
+                        <li>任意其他字符串：作为 <span class="inline-code">test</span> 事件，将该字符串加入事件日志（可供触发器条件检测）。</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong><span class="inline-code">"setBlock"</span></strong> —— 修改方块属性<br>
+                    需提供 <span class="field">"set": {</span>, <span class="field">"x"</span>, <span class="field">"y"</span>, <span class="field">"isCollide"</span>, <span class="field">"isDraw"</span>, <span class="field">}</span>。
+                </li>
+                <li>
+                    <strong><span class="inline-code">"LuaScripe"</span></strong> —— 执行 Lua 脚本<br>
+                    必须包含 <span class="field">"script"</span> 字段，值为脚本文件路径（相对于项目根目录）。
+                </li>
+            </ul>
+
+            <p><strong>Button 完整示例：</strong></p>
+            <pre>{
+                <span class="json-key">"type"</span>: <span class="json-string">"entity"</span>,
+                <span class="json-key">"type1"</span>: <span class="json-string">"button"</span>,
+                <span class="json-key">"actions"</span>: [
+                    {<span class="json-key">"type"</span>: <span class="json-string">"setBlock"</span>, <span class="json-key">"set": {</span>, <span class="json-key">"x"</span>: <span class="json-number">3</span>, <span class="json-key">"y"</span>: <span class="json-number">3</span>, <span class="json-key">"isCollide"</span>: <span class="json-boolean">false</span>, <span class="json-key">"isDraw"</span>: <span class="json-boolean">false</span>}, <span class="json-key">}</span>,
+                    {<span class="json-key">"type"</span>: <span class="json-string">"queueEvent"</span>, <span class="json-key">"event"</span>: {<span class="json-key">"event"</span>: <span class="json-string">"draw_msg"</span>, <span class="json-key">"name"</span>: <span class="json-string">"系统"</span>, <span class="json-key">"msg"</span>: <span class="json-string">"按钮已按下"</span>}},
+                    {<span class="json-key">"type"</span>: <span class="json-string">"queueEvent"</span>, <span class="json-key">"event"</span>: {<span class="json-key">"event"</span>: <span class="json-string">"playSound"</span>, <span class="json-key">"key"</span>: <span class="json-string">"bell"</span>}},
+                    {<span class="json-key">"type"</span>: <span class="json-string">"queueEvent"</span>, <span class="json-key">"event"</span>: {<span class="json-key">"event"</span>: <span class="json-string">"custom_event"</span>}},
+                    {<span class="json-key">"type"</span>: <span class="json-string">"LuaScripe"</span>, <span class="json-key">"script"</span>: <span class="json-string">"Lua/test.lua"</span>}
+                ],
+                <span class="json-key">"x"</span>: <span class="json-number">4</span>,
+                <span class="json-key">"y"</span>: <span class="json-number">2</span>
+            }</pre>
+
+            <!-- 4.5.3 trigger -->
+            <h4 id="trigger">4.5.3 type1 = "trigger" —— 触发器</h4>
+            <p>自动检测条件，满足时执行动作（无需玩家按键）。<br>
+                特殊字段 <span class="field">"repeat"</span>（布尔）：<span class="inline-code">true</span> 表示每次条件满足都执行；<span class="inline-code">false</span> 表示仅执行一次（执行后失效）。</p>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>字段</th><th>类型</th><th>说明</th></tr></thead>
+                    <tbody>
+                        <tr><td><span class="field">type</span></td><td><span class="type-code">string</span></td><td>固定 <span class="inline-code">"entity"</span></td></tr>
+                        <tr><td><span class="field">type1</span></td><td><span class="type-code">string</span></td><td>固定 <span class="inline-code">"trigger"</span></td></tr>
+                        <tr><td><span class="field">x</span></td><td><span class="type-code">int</span></td><td>坐标 X（用于碰撞条件）</td></tr>
+                        <tr><td><span class="field">y</span></td><td><span class="type-code">int</span></td><td>坐标 Y</td></tr>
+                        <tr><td><span class="field">repeat</span></td><td><span class="type-code">boolean</span></td><td>是否可重复触发</td></tr>
+                        <tr><td><span class="field">action</span></td><td><span class="type-code">object</span></td><td>包含 <span class="inline-code">"condition"</span> 和 <span class="inline-code">"execute"</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h5>action 结构</h5>
+            <p><span class="field">condition</span>：条件数组（多个条件按逻辑组合）<br>
+                每个条件对象包含：</p>
+            <ul>
+                <li><span class="field">"type"</span>：可选 <span class="inline-code">"collide"</span>, <span class="inline-code">"mainHand"</span>, <span class="inline-code">"event"</span>。</li>
+                <li><span class="field">"logic"</span>：可选 <span class="inline-code">"and"</span>, <span class="inline-code">"or"</span>, <span class="inline-code">"not"</span>，表示当前条件与前一个条件的逻辑关系（第一个条件忽略 logic）。</li>
+                <li>附加字段（依 type 而定）：
+                    <ul>
+                        <li><span class="inline-code">"collide"</span>：无额外字段，检测玩家是否站在触发器坐标上。</li>
+                        <li><span class="inline-code">"mainHand"</span>：检测玩家主手物品，需提供 <span class="field">"name"</span>, <span class="field">"label"</span>, <span class="field">"value"</span>；若某项不限制，填 <span class="inline-code">"NAN"</span>（字符串）或 <span class="inline-code">-1</span>（数值）。</li>
+                        <li><span class="inline-code">"event"</span>：检测某个事件是否刚发生过（事件名），需提供 <span class="field">"event"</span> 字段。</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <p><span class="field">execute</span>：动作数组）<br>
+                支持：</p>
+            <ul>
+                <li><span class="inline-code">"queueEvent"</span>：支持 <span class="inline-code">"draw_msg"</span>, <span class="inline-code">"playSound"</span>, <span class="inline-code">"playLoopSound"</span>, <span class="inline-code">"playBGM"</span>, <span class="inline-code">"stopAll"</span>, <span class="inline-code">"setPlayerHealth"</span>（不支持自定义 test）。</li>
+                <li><span class="inline-code">"setBlock"</span>：需提供 <span class="field">"set"</span> 对象，包含 <span class="field">"x"</span>, <span class="field">"y"</span>, <span class="field">"isCollide"</span>, <span class="field">"isDraw"</span>。</li>
+                <li><span class="inline-code">"LuaScripe"</span>：必须包含 <span class="field">"script"</span> 字段，值为脚本文件路径。</li>
+            </ul>
+
+            <p><strong>Trigger 完整示例：</strong></p>
+            <pre>{
+                <span class="json-key">"type"</span>: <span class="json-string">"entity"</span>,
+                <span class="json-key">"type1"</span>: <span class="json-string">"trigger"</span>,
+                <span class="json-key">"repeat"</span>: <span class="json-boolean">false</span>,
+                <span class="json-key">"action"</span>: {
+                    <span class="json-key">"condition"</span>: [
+                        {<span class="json-key">"type"</span>: <span class="json-string">"collide"</span>, <span class="json-key">"logic"</span>: <span class="json-string">"and"</span>},
+                        {<span class="json-key">"type"</span>: <span class="json-string">"mainHand"</span>, <span class="json-key">"logic"</span>: <span class="json-string">"or"</span>, <span class="json-key">"name"</span>: <span class="json-string">"钻石"</span>, <span class="json-key">"label"</span>: <span class="json-string">"NAN"</span>, <span class="json-key">"value"</span>: <span class="json-number">-1</span>}
+                    ],
+                    <span class="json-key">"execute"</span>: [
+                        {<span class="json-key">"type"</span>: <span class="json-string">"queueEvent"</span>, <span class="json-key">"event"</span>: {<span class="json-key">"event"</span>: <span class="json-string">"playSound"</span>, <span class="json-key">"key"</span>: <span class="json-string">"bell"</span>}},
+                        {<span class="json-key">"type"</span>: <span class="json-string">"queueEvent"</span>, <span class="json-key">"event"</span>: {<span class="json-key">"event"</span>: <span class="json-string">"draw_msg"</span>, <span class="json-key">"name"</span>: <span class="json-string">"系统"</span>, <span class="json-key">"msg"</span>: <span class="json-string">"条件满足！"</span>}},
+                        {<span class="json-key">"type"</span>: <span class="json-string">"setBlock"</span>, <span class="json-key">"set"</span>: {<span class="json-key">"x"</span>: <span class="json-number">2</span>, <span class="json-key">"y"</span>: <span class="json-number">2</span>, <span class="json-key">"isCollide"</span>: <span class="json-boolean">true</span>, <span class="json-key">"isDraw"</span>: <span class="json-boolean">true</span>}},
+                        {<span class="json-key">"type"</span>: <span class="json-string">"LuaScripe"</span>, <span class="json-key">"script"</span>: <span class="json-string">"Lua/test.lua"</span>}
+                    ]
+                },
+                <span class="json-key">"x"</span>: <span class="json-number">4</span>,
+                <span class="json-key">"y"</span>: <span class="json-number">3</span>
+            }</pre>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- 5. 事件系统 -->
+        <!-- ============================================================ -->
+
+        <section class="section" id="events">
+            <h2>5. 事件系统</h2>
+            <p>事件用于解耦交互与响应，通过 <span class="inline-code">Events</span> 单例管理。</p>
+
+            <h3>5.1 内置事件（由游戏自动触发）</h3>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>事件名（代码中）</th><th>触发时机</th><th>参数</th></tr></thead>
+                    <tbody>
+                        <tr><td><span class="inline-code">DrawMessages</span></td><td>对话 NPC 交互</td><td><span class="field">name</span>, <span class="field">msg</span>（字符串数组）</td></tr>
+                        <tr><td><span class="inline-code">DrawMessage</span></td><td>单条消息（按钮、拾取、系统提示）</td><td><span class="field">name</span>, <span class="field">msg</span>（字符串）</td></tr>
+                        <tr><td><span class="inline-code">playSound</span></td><td>播放短音效</td><td><span class="field">key</span>（音频键名）</td></tr>
+                        <tr><td><span class="inline-code">playLoopSound</span></td><td>循环播放音效</td><td><span class="field">key</span></td></tr>
+                        <tr><td><span class="inline-code">playBGM</span></td><td>切换背景音乐</td><td><span class="field">key</span></td></tr>
+                        <tr><td><span class="inline-code">stopAll</span></td><td>停止所有音频</td><td>无</td></tr>
+                        <tr><td><span class="inline-code">setPlayerHealth</span></td><td>设置玩家生命值</td><td><span class="field">health</span>（整数）</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>5.2 自定义事件（test 事件）</h3>
+            <p>通过按钮的 <span class="inline-code">queueEvent</span> 动作，若 <span class="field">"event"</span> 字段不是上述固定名称，则会被作为 <span class="inline-code">test</span> 事件处理，将事件名字符串写入事件日志（LOG）。<br>
+                触发器可通过 <span class="inline-code">"event"</span> 条件检测该日志中是否存在指定字符串（检测后会消费该日志条目）。</p>
+            <div class="warning">
+                ⚠️ <span class="inline-code">getLOG</span> 会删除日志中所有匹配项，因此同一事件只能被一个触发器消费一次。
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- 6. 音频配置 -->
+        <!-- ============================================================ -->
+
+        <section class="section" id="audio">
+            <h2>6. 音频配置</h2>
+            <p>音频配置文件（由 <span class="inline-code">setting.txt</span> 的 <span class="field">"content"</span> 指定）为 JSON 数组，每个元素定义一种音频。</p>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>字段</th><th>类型</th><th>说明</th></tr></thead>
+                    <tbody>
+                        <tr><td><span class="field">key</span></td><td><span class="type-code">string</span></td><td>唯一标识（用于事件引用）</td></tr>
+                        <tr><td><span class="field">type</span></td><td><span class="type-code">string</span></td><td><span class="inline-code">"sound"</span> 或 <span class="inline-code">"BGM"</span></td></tr>
+                        <tr><td><span class="field">file</span></td><td><span class="type-code">string</span></td><td>音频文件路径（相对项目根目录）</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p><strong>示例：</strong></p>
+            <pre>[
+                {<span class="json-key">"key"</span>: <span class="json-string">"bell"</span>, <span class="json-key">"type"</span>: <span class="json-string">"sound"</span>, <span class="json-key">"file"</span>: <span class="json-string">"sound/bell.wav"</span>},
+                {<span class="json-key">"key"</span>: <span class="json-string">"home"</span>, <span class="json-key">"type"</span>: <span class="json-string">"BGM"</span>, <span class="json-key">"file"</span>: <span class="json-string">"sound/home.wav"</span>}
+            ]</pre>
+            <ul>
+                <li><span class="inline-code">type = "sound"</span>：短音效，使用 <code>Clip</code> 预加载，可多次播放。</li>
+                <li><span class="inline-code">type = "BGM"</span>：背景音乐，使用流式播放（<code>SourceDataLine</code>），支持无缝循环，切换时会停止当前并播放新曲。</li>
+            </ul>
+            <div class="note">
+                📌 推荐使用 WAV 格式，以确保 Java Sound API 的最佳兼容性。
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- 7. Lua 脚本 -->
+        <!-- ============================================================ -->
+
+        <section class="section" id="lua">
+            <h2>7. Lua 脚本接口</h2>
+            <p>脚本可通过 <span class="inline-code">LuaEngine</span> 提供的全局函数与游戏交互。</p>
+
+            <h3>7.1 全局函数</h3>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>函数</th><th>参数</th><th>返回值</th><th>说明</th></tr></thead>
+                    <tbody>
+                        <tr><td><span class="inline-code">getContent()</span></td><td>无</td><td>LuaTable</td><td>返回当前游戏数据（方块、玩家、实体等）的只读副本。</td></tr>
+                        <tr><td><span class="inline-code">setBlock(blockTable)</span></td><td>LuaTable</td><td>无</td><td>修改指定方块属性，需包含 <span class="field">blockID</span>、<span class="field">blockX</span>、<span class="field">blockY</span>、<span class="field">blockW</span>、<span class="field">blockH</span>、<span class="field">isDraw</span>、<span class="field">isCollide</span>。</td></tr>
+                        <tr><td><span class="inline-code">queueEvent(eventName, argsTable)</span></td><td>字符串事件名，参数表</td><td>无</td><td>触发自定义事件（写入日志），参数表为数组，每个元素为 <span class="inline-code">{key="...", value="..."}</span>。</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p><strong><span class="inline-code">getContent</span> 返回的表结构（示例）：</strong></p>
+            <pre style="background:#1e293b;color:#e2e8f0;">
+                <span style="color:#c084fc;">local</span> data = <span style="color:#93c5fd;">getContent</span>()
+                <span style="color:#c084fc;">local</span> blocks = data.blocks  <span style="color:#94a3b8;">-- 数组，每个元素有 blockX, blockY, blockID, blockW, blockH, isDraw, isCollide</span>
+                <span style="color:#c084fc;">local</span> player = data.player  <span style="color:#94a3b8;">-- 包含 player.x, player.y, face, player.health</span>
+            </pre>
+
+            <p><strong>修改方块的示例（<span class="inline-code">Lua/test.lua</span>）：</strong></p>
+            <pre style="background:#1e293b;color:#e2e8f0;">
+                <span style="color:#c084fc;">local</span> block = { blockID = <span style="color:#93c5fd;">0</span>, blockX = <span style="color:#93c5fd;">5</span>, blockY = <span style="color:#93c5fd;">5</span>, isDraw = <span style="color:#f472b6;">true</span>, isCollide = <span style="color:#f472b6;">false</span> }
+                <span style="color:#93c5fd;">setBlock</span>(block)
+                <span style="color:#93c5fd;">queueEvent</span>(<span style="color:#6ee7b7;">"custom"</span>, { {key = <span style="color:#6ee7b7;">"info"</span>, value = <span style="color:#6ee7b7;">"script executed"</span>} })
+            </pre>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- 8. FAQ -->
+        <!-- ============================================================ -->
+
+        <section class="section" id="faq">
+            <h2>8. 常见问题（FAQ）</h2>
+
+            <div class="note">
+                <strong>Q：地图加载失败或出现 NullPointerException？</strong><br>
+                A：检查 <span class="inline-code">setting.txt</span> 是否存在且格式正确；检查地图 JSON 是否包含 <span class="inline-code">"player"</span> 对象；确保所有图片路径存在。
+            </div>
+
+            <div class="note">
+                <strong>Q：音效无法播放？</strong><br>
+                A：确认音频文件路径正确，格式受 Java Sound 支持（建议使用 WAV）。若为 MP3，可能需要额外解码库（本引擎未内置）。
+            </div>
+
+            <div class="note">
+                <strong>Q：触发器条件不生效？</strong><br>
+                A：检查 <span class="inline-code">"event"</span> 条件是否消费了日志（同一事件只能被一个触发器消费）。建议将自定义事件用于全局状态，而非重复触发。
+            </div>
+
+            <div class="note">
+                <strong>Q：如何重置玩家位置和地图状态？</strong><br>
+                A：按 <span class="kbd">R</span> 键即可重新加载地图，所有状态恢复初始。
+            </div>
+
+            <div class="note">
+                <strong>Q：如何扩展新实体或动作类型？</strong><br>
+                A：可在 <span class="inline-code">content.java</span> 中新增 <span class="inline-code">Entity</span> 子类，并在 <span class="inline-code">register.createEntity</span> 中解析；动作可添加新的 <span class="inline-code">Execute.ActionType</span>，并在 <span class="inline-code">Button</span> 或 <span class="inline-code">Trigger</span> 的 <span class="inline-code">myAction</span> 中实现逻辑。
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- 9. 开发与扩展 -->
+        <!-- ============================================================ -->
+
+        <section class="section" id="extend">
+            <h2>9. 开发与扩展建议</h2>
+            <ul>
+                <li><strong>事件驱动</strong>：优先使用 <span class="inline-code">Events</span> 发送消息，避免硬编码耦合。</li>
+                <li><strong>Lua 脚本</strong>：适合编写复杂的条件判断或临时调试，但注意性能（每次 <span class="inline-code">eval</span> 都会重新解析）。</li>
+                <li><strong>地图设计</strong>：合理使用 <span class="inline-code">Trigger</span> 和 <span class="inline-code">Button</span> 可构建丰富的剧情或谜题。</li>
+                <li><strong>性能优化</strong>：避免在 tick 中执行耗时操作；若需长时间运行，请使用独立线程。</li>
+            </ul>
+            <p style="margin-top:24px;color:#64748b;font-style:italic;border-top:1px solid #e2e8f0;padding-top:20px;">
+                本说明涵盖了游戏的核心功能与配置方法。如有更多疑问，请查阅源代码或联系开发者。祝游戏愉快！
+            </p>
+        </section>
+
+        <!-- 页脚 -->
+        <footer style="margin-top:48px;padding-top:20px;border-top:1px solid #e2e8f0;color:#94a3b8;font-size:14px;text-align:center;">
+            <span>📄 文档基于游戏源码生成 · 由 6g66gtf 制作</span>
+        </footer>
+
+    </div>
+
+    <!-- ===== 平滑滚动 & 高亮 ===== -->
+    <script>
+        (function() {
+            // 侧边栏链接点击平滑滚动
+            const links = document.querySelectorAll('.sidebar a');
+            links.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const targetId = this.getAttribute('href');
+                    if (targetId && targetId.startsWith('#')) {
+                        e.preventDefault();
+                        const target = document.querySelector(targetId);
+                        if (target) {
+                            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            // 更新高亮
+                            links.forEach(l => l.classList.remove('active'));
+                            this.classList.add('active');
+                            // 更新 URL 哈希
+                            history.pushState(null, null, targetId);
+                        }
+                    }
+                });
+            });
+
+            // 滚动时高亮当前章节
+            const sections = document.querySelectorAll('.section');
+            const observer = new IntersectionObserver((entries) => {
+                let activeId = null;
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        activeId = entry.target.id;
+                    }
+                });
+                if (activeId) {
+                    links.forEach(l => {
+                        l.classList.toggle('active', l.getAttribute('href') === '#' + activeId);
+                    });
+                }
+            }, { threshold: 0.35 });
+
+            sections.forEach(sec => observer.observe(sec));
+
+            // 如果 URL 有哈希，滚动到对应位置
+            if (window.location.hash) {
+                const target = document.querySelector(window.location.hash);
+                if (target) {
+                    setTimeout(() => {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 200);
+                    // 高亮对应链接
+                    const hash = window.location.hash;
+                    links.forEach(l => {
+                        l.classList.toggle('active', l.getAttribute('href') === hash);
+                    });
+                }
+            }
+        })();
+    </script>
+
+</body>
+</html>
