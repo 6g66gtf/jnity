@@ -1,4 +1,4 @@
-# penigin
+# Jnity
 用脚趾想出来的2D引擎\
 基于java制作，这个引擎使用json和lua脚本来定义你的游戏\
 \
