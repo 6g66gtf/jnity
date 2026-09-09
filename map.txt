@@ -1,0 +1,622 @@
+{
+    "events": [
+        {"event": "playBGM", "key": "home"},
+        {"event": "playSound", "key": "老吴"},
+        {"event": "draw_msg", "name": "基米", "msg": "检测到大运轮胎，即刻开启自动吸附", "isCover": true}
+    ],
+    "content": [
+        {
+            "type": "box",
+            "type1": "block",
+            "x": -2,
+            "y": -2,
+            "w": 1,
+            "h": 5,
+            "layer": 6,
+            "rotate": 0,
+            "image": "icon/wall.png",
+            "isRepeat": true,
+            "isCollide": true,
+            "isDraw": true
+        },
+        {
+            "type": "box",
+            "type1": "block",
+            "x": -1,
+            "y": 2,
+            "w": 10,
+            "h": 1,
+            "layer": 5,
+            "rotate": 0,
+            "image": "icon/wall.png",
+            "isRepeat": true,
+            "isCollide": true,
+            "isDraw": true
+        },
+        {
+            "type": "box",
+            "type1": "block",
+            "x": -1,
+            "y": -2,
+            "w": 10,
+            "h": 1,
+            "layer": 4,
+            "rotate": 0,
+            "image": "icon/wall.png",
+            "isRepeat": true,
+            "isCollide": true,
+            "isDraw": true
+        },
+        {
+            "type": "box",
+            "type1": "block",
+            "x": -100,
+            "y": -100,
+            "w": 5,
+            "h": 5,
+            "layer": 3,
+            "rotate": 0,
+            "image": "icon/大运.png",
+            "isRepeat": false,
+            "isCollide": false,
+            "isDraw": true
+        },
+        {
+            "type": "box",
+            "type1": "block",
+            "x": 10,
+            "y": -1,
+            "w": 3,
+            "h": 1,
+            "layer": 2,
+            "rotate": 0,
+            "image": "icon/猫饼.png",
+            "isRepeat": false,
+            "isCollide": true,
+            "isDraw": false
+        },
+        {
+            "type": "box",
+            "type1": "block",
+            "x": -1,
+            "y": 0,
+            "w": 1,
+            "h": 1,
+            "layer": 1,
+            "rotate": 0,
+            "image": "icon/npc.png",
+            "isRepeat": false,
+            "isCollide": true,
+            "isDraw": true
+        },
+        {
+            "type": "box",
+            "type1": "block",
+            "x": 9,
+            "y": 12,
+            "w": 1,
+            "h": 1,
+            "layer": 3,
+            "rotate": 0,
+            "image": "icon/button.png",
+            "isRepeat": false,
+            "isCollide": true,
+            "isDraw": true
+        },
+        {
+            "type": "box",
+            "type1": "block",
+            "x": 9,
+            "y": -2,
+            "w": 5,
+            "h": 5,
+            "layer": 1,
+            "rotate": 0,
+            "image": "icon/floor.png",
+            "isRepeat": false,
+            "isCollide": false,
+            "isDraw": true
+        },
+        {
+            "type": "box",
+            "type1": "block",
+            "x": 9,
+            "y": 3,
+            "w": 5,
+            "h": 5,
+            "layer": 1,
+            "rotate": 0,
+            "image": "icon/floor.png",
+            "isRepeat": false,
+            "isCollide": false,
+            "isDraw": true
+        },
+        {
+            "type": "box",
+            "type1": "block",
+            "x": 9,
+            "y": 8,
+            "w": 5,
+            "h": 5,
+            "layer": 1,
+            "rotate": 0,
+            "image": "icon/floor.png",
+            "isRepeat": false,
+            "isCollide": false,
+            "isDraw": true
+        },
+        {
+            "type": "box",
+            "type1": "block",
+            "x": 9,
+            "y": -2,
+            "w": 5,
+            "h": 1,
+            "layer": 1,
+            "rotate": 0,
+            "image": "icon/滚木.png",
+            "isRepeat": false,
+            "isCollide": true,
+            "isDraw": false
+        },
+        {
+            "type": "box",
+            "type1": "block",
+            "x": 9,
+            "y": 2,
+            "w": 1,
+            "h": 1,
+            "layer": 1,
+            "rotate": 0,
+            "image": "icon/滚木.png",
+            "isRepeat": false,
+            "isCollide": true,
+            "isDraw": false
+        },
+        {
+            "type": "box",
+            "type1": "block",
+            "x": 14,
+            "y": -2,
+            "w": 5,
+            "h": 5,
+            "layer": 1,
+            "rotate": 0,
+            "image": "icon/大狗.png",
+            "isRepeat": false,
+            "isCollide": true,
+            "isDraw": true
+        },
+        {
+            "type": "box",
+            "type1": "block",
+            "x": 9,
+            "y": 13,
+            "w": 5,
+            "h": 5,
+            "layer": 1,
+            "rotate": 0,
+            "image": "icon/可口水果.png",
+            "isRepeat": false,
+            "isCollide": true,
+            "isDraw": true
+        },
+        {
+            "type": "box",
+            "type1": "block",
+            "x": 8,
+            "y": 3,
+            "w": 1,
+            "h": 10,
+            "layer": 1,
+            "rotate": 0,
+            "image": "icon/wall.png",
+            "isRepeat": true,
+            "isCollide": true,
+            "isDraw": true
+        },
+        {
+            "type": "box",
+            "type1": "block",
+            "x": 14,
+            "y": 3,
+            "w": 1,
+            "h": 9,
+            "layer": 1,
+            "rotate": 0,
+            "image": "icon/wall.png",
+            "isRepeat": true,
+            "isCollide": true,
+            "isDraw": true
+        },
+        {
+            "type": "box",
+            "type1": "block",
+            "x": -2,
+            "y": -6,
+            "w": 5,
+            "h": 3,
+            "layer": 1,
+            "rotate": 0,
+            "image": "icon/箭头.png",
+            "isRepeat": false,
+            "isCollide": false,
+            "isDraw": true
+        },
+        {
+            "type": "box",
+            "type1": "trap",
+            "x": 15,
+            "y": 13,
+            "w": 1,
+            "h": 9,
+            "damage": 1,
+            "rotate": 90,
+            "isRepeat": true;
+            "image": "icon/刺.png",
+        },
+        {
+            "type": "box",
+            "type1": "block",
+            "x": 9,
+            "y": 10,
+            "w": 3,
+            "h": 3,
+            "layer": 4,
+            "rotate": 0,
+            "image": "icon/危险.png",
+            "isRepeat": false,
+            "isCollide": false,
+            "isDraw": false
+        },
+        {
+            "type": "box",
+            "type1": "block",
+            "x": 14,
+            "y": 13,
+            "w": 1,
+            "h": 10,
+            "layer": 1,
+            "rotate": 0,
+            "image": "icon/wall.png",
+            "isRepeat": true,
+            "isCollide": true,
+            "isDraw": true
+        },
+        {
+            "type": "box",
+            "type1": "block",
+            "x": 15,
+            "y": 11,
+            "w": 10,
+            "h": 1,
+            "layer": 1,
+            "rotate": 0,
+            "image": "icon/wall.png",
+            "isRepeat": true,
+            "isCollide": true,
+            "isDraw": true
+        },
+        {
+            "type": "box",
+            "type1": "block",
+            "x": 24,
+            "y": 12,
+            "w": 1,
+            "h": 11,
+            "layer": 1,
+            "rotate": 0,
+            "image": "icon/wall.png",
+            "isRepeat": true,
+            "isCollide": true,
+            "isDraw": true
+        },
+        {
+            "type": "box",
+            "type1": "block",
+            "x": 15,
+            "y": 22,
+            "w": 8,
+            "h": 1,
+            "layer": 1,
+            "rotate": 0,
+            "image": "icon/wall.png",
+            "isRepeat": true,
+            "isCollide": true,
+            "isDraw": true
+        },
+        {
+            "type": "box",
+            "type1": "block",
+            "x": 23,
+            "y": 22,
+            "w": 1,
+            "h": 1,
+            "layer": 1,
+            "rotate": 0,
+            "image": "icon/heavy door.png",
+            "isRepeat": false,
+            "isCollide": true,
+            "isDraw": true
+        },
+        {
+            "type": "box",
+            "type1": "block",
+            "x": 14,
+            "y": 12,
+            "w": 1,
+            "h": 1,
+            "layer": 1,
+            "rotate": 0,
+            "image": "icon/heavy door.png",
+            "isRepeat": false,
+            "isCollide": true,
+            "isDraw": true
+        },
+        {
+            "type": "box",
+            "type1": "block",
+            "x": 14,
+            "y": 11,
+            "w": 1,
+            "h": 1,
+            "layer": 1,
+            "rotate": 0,
+            "image": "icon/PC.png",
+            "isRepeat": false,
+            "isCollide": true,
+            "isDraw": true
+        },
+        {
+            "type": "box",
+            "type1": "block",
+            "x": 24,
+            "y": 23,
+            "w": 1,
+            "h": 1,
+            "layer": 2,
+            "rotate": 0,
+            "image": "icon/PC.png",
+            "isRepeat": false,
+            "isCollide": true,
+            "isDraw": true
+        },
+        {
+            "type": "box",
+            "type1": "block",
+            "x": 22,
+            "y": 22,
+            "w": 1,
+            "h": 1,
+            "layer": 2,
+            "rotate": 0,
+            "image": "icon/button.png",
+            "isRepeat": false,
+            "isCollide": true,
+            "isDraw": true
+        },
+        {
+            "type": "box",
+            "type1": "block",
+            "x": 14,
+            "y": 23,
+            "w": 9,
+            "h": 1,
+            "layer": 1,
+            "rotate": 90,
+            "image": "icon/wall1.png",
+            "isRepeat": true,
+            "isCollide": true,
+            "isDraw": true
+        },
+        {
+            "type": "box",
+            "type1": "block",
+            "x": 24,
+            "y": 23,
+            "w": 1,
+            "h": 10,
+            "layer": 1,
+            "rotate": 0,
+            "image": "icon/wall1.png",
+            "isRepeat": true,
+            "isCollide": true,
+            "isDraw": true
+        },
+        {
+            "type": "box",
+            "type1": "block",
+            "x": 14,
+            "y": 32,
+            "w": 10,
+            "h": 1,
+            "layer": 1,
+            "rotate": 90,
+            "image": "icon/wall1.png",
+            "isRepeat": true,
+            "isCollide": true,
+            "isDraw": true
+        },
+        {
+            "type": "box",
+            "type1": "block",
+            "x": 14,
+            "y": 24,
+            "w": 1,
+            "h": 8,
+            "layer": 1,
+            "rotate": 0,
+            "image": "icon/wall1.png",
+            "isRepeat": true,
+            "isCollide": true,
+            "isDraw": true
+        },
+        {
+            "type": "box",
+            "type1": "block",
+            "x": 21,
+            "y": 24,
+            "w": 1,
+            "h": 1,
+            "layer": 1,
+            "rotate": 0,
+            "image": "icon/table.png",
+            "isRepeat": false,
+            "isCollide": true,
+            "isDraw": true
+        },
+        {
+            "type": "box",
+            "type1": "block",
+            "x": 21,
+            "y": 24,
+            "w": 1,
+            "h": 1,
+            "layer": 2,
+            "rotate": 0,
+            "image": "icon/可口水果.png",
+            "isRepeat": false,
+            "isCollide": true,
+            "isDraw": true
+        },
+        {
+            "type": "box",
+            "type1": "trap",
+            "x": 16,
+            "y": 21,
+            "w": 6,
+            "h": 1,
+            "damage": 1,
+            "rotate": 0,
+            "isRepeat": true;
+            "image": "icon/刺.png",
+        },
+        {
+            "type": "box",
+            "type1": "trap",
+            "x": 17,
+            "y": 12,
+            "w": 6,
+            "h": 1,
+            "damage": 1,
+            "rotate": 180,
+            "isRepeat": true;
+            "image": "icon/刺.png",
+        },
+        {
+            "type": "box",
+            "type1": "trap",
+            "x": 23,
+            "y": 12,
+            "w": 1,
+            "h": 8,
+            "damage": 1,
+            "rotate": 270,
+            "isRepeat": true;
+            "image": "icon/刺.png",
+        },
+        {
+            "type": "entity",
+            "type1": "button",
+            "actions": [
+                {"type": "queueEvent", "event": {"event": "draw_msg", "name": "system", "msg": "这是一张基于jnityV2.1测试版0.6的地图"}},
+                {"type": "queueDelayEvent", "event": {"event": "draw_msg", "ticks": 1000, "name": "system", "msg": "这张地图包含了当前版本所有可用的东西"}},
+                {"type": "queueDelayEvent", "event": {"event": "stopAll_msg", "ticks": 2000}}
+            ],
+            "x": -1,
+            "y": 0
+        },
+        {
+            "type": "entity",
+            "type1": "button",
+            "actions": [
+                {"type": "queueEvent", "event": {"event": "LuaScript", "script":"Lua/boss.lua"}}
+            ],
+            "x": 22,
+            "y": 22
+        },
+        {
+            "type": "entity",
+            "type1": "button",
+            "actions": [
+                {"type": "queueEvent", "event": {"event": "LuaScript", "script": "Lua/rotate.lua"}}
+            ],
+            "x": 9,
+            "y": 12
+        },
+        {
+            "type": "entity",
+            "type1": "button",
+            "actions": [
+                {"type": "queueEvent", "event": {"event": "draw_msg", "name": "system", "msg": "已存档"}},
+                {"type": "queueEvent", "event": {"event": "setSave", "x": 15, "y": 12}}
+            ],
+            "x": 14,
+            "y": 11
+        },
+        {
+            "type": "entity",
+            "type1": "button",
+            "actions": [
+                {"type": "queueEvent", "event": {"event": "draw_msg", "name": "system", "msg": "已存档"}},
+                {"type": "queueEvent", "event": {"event": "setSave", "x": 23, "y": 23}}
+            ],
+            "x": 24,
+            "y": 23
+        },
+        {
+            "type": "item",
+            "name": "美味茶饮",
+            "label": "增加10点血量",
+            "value": 10,
+            "actions": [
+                {"type": "queueEvent", "event": {"event": "LuaScript", "script": "Lua/item.lua"}}
+            ],
+            "image": "icon/美味茶饮.png",
+            "x": -1,
+            "y": -1
+        },
+        {
+            "type": "entity",
+            "type1": "trigger",
+            "repeat": false,
+            "action": {
+                "condition": [
+                    {"type": "collide", "logic": "and"}
+                ],
+                "execute": [
+                    {"type": "queueEvent", "event": {"event": "LuaScript", "script": "Lua/test.lua"}}
+                ]
+            },
+            "x": 10,
+            "y": -2,
+            "w": 1,
+            "h": 5
+        },
+        {
+            "type": "entity",
+            "type1": "trigger",
+            "repeat": false,
+            "action": {
+                "condition": [
+                    {"type": "collide", "logic": "and"}
+                ],
+                "execute": [
+                    {"type": "queueEvent", "event": {"event": "stopAll"}},
+                    {"type": "queueEvent", "event": {"event": "LuaScript", "script": "Lua/feet.lua"}}
+                ]
+            },
+            "x": 20,
+            "y": 24,
+            "w": 3,
+            "h": 2
+        },
+        {
+            "type": "player",
+            "image": "icon/哈基米.png",
+            "x": 14,
+            "y": 12,
+            "default-health": 1
+        }
+    ]
+}
